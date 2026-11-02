@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First GitHub Website</title>
+    <title>De Puerto Rico pa'l mundo CB</title>
     <style>
         html, body {
             height: 100%;
@@ -102,8 +102,8 @@
             background: transparent;
             border: none;
             color: #aaaaaa;
-            padding: 10px 6px;
-            font-size: 0.7rem;
+            padding: 10px 4px;
+            font-size: 0.65rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -193,6 +193,33 @@
             font-weight: bold;
         }
 
+        /* Social Links Grid */
+        .social-grid {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex: 1;
+            transition: all 0.2s ease;
+        }
+
+        .social-btn:hover {
+            background: #3498db;
+            color: #000;
+            border-color: #3498db;
+        }
+
         /* GUI Buttons & Actions */
         .gui-btn {
             background: rgba(255, 255, 255, 0.1);
@@ -233,13 +260,15 @@
 
     <!-- Multi-Tab GUI Control Panel -->
     <div class="gui-panel">
-        <!-- Tab Navigation -->
+        <!-- Tab Navigation (Now 7 Tabs) -->
         <div class="gui-tabs">
             <button class="tab-btn active" onclick="switchTab('products-tab', this)">Products</button>
             <button class="tab-btn" onclick="switchTab('dates-tab', this)">Dates</button>
             <button class="tab-btn" onclick="switchTab('creator-tab', this)">Creator</button>
+            <button class="tab-btn" onclick="switchTab('socials-tab', this)">Socials</button>
+            <button class="tab-btn" onclick="switchTab('audio-tab', this)">Audio</button>
             <button class="tab-btn" onclick="switchTab('contact-tab', this)">Contact</button>
-            <button class="tab-btn" onclick="switchTab('general-info-tab', this)">General Info</button>
+            <button class="tab-btn" onclick="switchTab('general-info-tab', this)">Info</button>
         </div>
 
         <!-- 1. Products Tab -->
@@ -289,14 +318,32 @@
             <p id="creator-2" style="font-size: 0.75rem; color: #aaa;">Representing roots worldwide from the island.</p>
         </div>
 
-        <!-- 4. Contact Tab -->
+        <!-- 4. Socials Tab (NEW) -->
+        <div id="socials-tab" class="tab-content">
+            <p id="socials-desc">Follow the movement across social media:</p>
+            <div class="social-grid">
+                <a href="https://instagram.com" target="_blank" class="social-btn">Instagram</a>
+                <a href="https://tiktok.com" target="_blank" class="social-btn">TikTok</a>
+                <a href="https://youtube.com" target="_blank" class="social-btn">YouTube</a>
+            </div>
+        </div>
+
+        <!-- 5. Audio Player Tab (NEW) -->
+        <div id="audio-tab" class="tab-content">
+            <p id="audio-desc">Play ambient background sound:</p>
+            <!-- Royalty-free ambient lo-fi / chill background stream audio element -->
+            <audio id="bg-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3"></audio>
+            <button id="audio-btn" class="gui-btn" onclick="toggleAudio()">▶ Play Ambient Beats</button>
+        </div>
+
+        <!-- 6. Contact Tab -->
         <div id="contact-tab" class="tab-content">
             <p id="contact-text">Get in touch or collaborate with the project.</p>
             <p>📞 <a href="tel:9395556567">939-555-6567</a></p>
             <a id="contact-btn" href="mailto:notarealemail@gmail.com" class="gui-btn">Email Me</a>
         </div>
 
-        <!-- 5. General Info Tab -->
+        <!-- 7. General Info Tab -->
         <div id="general-info-tab" class="tab-content">
             <p id="info-1">Hosted live on GitHub Pages.</p>
             <p id="info-2" style="font-size: 0.75rem; color: #aaa;">Built with HTML5, CSS3, and JavaScript.</p>
@@ -316,6 +363,23 @@
             btnElement.classList.add('active');
         }
 
+        // Audio Toggle Logic
+        let isPlaying = false;
+        function toggleAudio() {
+            const audio = document.getElementById('bg-audio');
+            const btn = document.getElementById('audio-btn');
+            
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                btn.innerText = currentLang === 'en' ? '▶ Play Ambient Beats' : '▶ Reproducir Música';
+            } else {
+                audio.play();
+                isPlaying = true;
+                btn.innerText = currentLang === 'en' ? '⏸ Pause Ambient Beats' : '⏸ Pausar Música';
+            }
+        }
+
         // Translation Dictionary & Logic
         let currentLang = 'en';
         const translations = {
@@ -330,6 +394,10 @@
                 dates2: "<strong>Next Update:</strong> Q1 2027",
                 creator1: "Created with pride by <strong>CB</strong>",
                 creator2: "Representing roots worldwide from the island.",
+                socialsDesc: "Follow the movement across social media:",
+                audioDesc: "Play ambient background sound:",
+                audioBtnPlay: "▶ Play Ambient Beats",
+                audioBtnPause: "⏸ Pause Ambient Beats",
                 contactText: "Get in touch or collaborate with the project.",
                 contactBtn: "Email Me",
                 info1: "Hosted live on GitHub Pages.",
@@ -347,6 +415,10 @@
                 dates2: "<strong>Próxima Actualización:</strong> Q1 2027",
                 creator1: "Creado con orgullo por <strong>CB</strong>",
                 creator2: "Representando las raíces de la isla para el mundo.",
+                socialsDesc: "Sigue el movimiento en redes sociales:",
+                audioDesc: "Reproduce sonido ambiente de fondo:",
+                audioBtnPlay: "▶ Reproducir Música",
+                audioBtnPause: "⏸ Pausar Música",
                 contactText: "Ponte en contacto o colabora con el proyecto.",
                 contactBtn: "Enviar Correo",
                 info1: "Alojado en vivo en GitHub Pages.",
@@ -373,6 +445,9 @@
             document.getElementById('dates-2').innerHTML = t.dates2;
             document.getElementById('creator-1').innerHTML = t.creator1;
             document.getElementById('creator-2').innerText = t.creator2;
+            document.getElementById('socials-desc').innerText = t.socialsDesc;
+            document.getElementById('audio-desc').innerText = t.audioDesc;
+            document.getElementById('audio-btn').innerText = isPlaying ? t.audioBtnPause : t.audioBtnPlay;
             document.getElementById('contact-text').innerText = t.contactText;
             document.getElementById('contact-btn').innerText = t.contactBtn;
             document.getElementById('info-1').innerText = t.info1;
