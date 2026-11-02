@@ -9,13 +9,16 @@
             overflow: hidden;
         }
         body {
-            background-color: #000000;
+            /* Plantain plantation background with a dark overlay for text readability */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1595974482597-4787dc64de95?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.5s ease;
         }
 
         /* Color classes */
@@ -23,16 +26,16 @@
         .blue-text { color: #3498db; }
         .white-text { color: #ffffff; }
 
-        /* Main heading styling & interactive hover effect */
+        /* Main heading styling */
         h1 {
             font-size: 3.5rem;
             margin: 0 0 20px 0;
             text-align: center;
             line-height: 1.2;
             cursor: pointer;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
-        /* Make individual letters pop and bounce when hovered */
         h1 span {
             display: inline-block;
             transition: transform 0.2s ease, text-shadow 0.2s ease;
@@ -40,39 +43,110 @@
 
         h1 span:hover {
             transform: scale(1.3) translateY(-10px);
-            text-shadow: 0 0 15px currentColor;
+            text-shadow: 0 0 20px currentColor;
         }
 
         /* Subtitle */
         .subtitle {
             color: #ffffff;
             font-size: 1.5rem;
-            margin: 0 0 30px 0;
+            margin: 0 0 40px 0;
             letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
-        /* Interactive Button */
-        .interactive-btn {
-            background-color: transparent;
-            color: #3498db;
-            border: 2px solid #3498db;
-            padding: 10px 25px;
-            font-size: 1rem;
-            border-radius: 30px;
+        /* --- MULTI-TAB GUI CONTROL PANEL --- */
+        .gui-panel {
+            position: absolute;
+            bottom: 30px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            width: 440px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+
+        /* Tab Navigation Bar */
+        .gui-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #aaaaaa;
+            padding: 10px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
-        .interactive-btn:hover {
-            background-color: #3498db;
-            color: #000000;
-            box-shadow: 0 0 20px #3498db;
-            transform: scale(1.05);
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* Tab Content Panes */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .tab-content p {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* GUI Buttons & Actions */
+        .gui-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .gui-btn:hover {
+            background: #3498db;
+            color: #000;
         }
     </style>
 </head>
 <body>
-    <h1 title="Hover over the letters!">
+
+    <!-- Main Content -->
+    <h1 id="main-heading">
         <span class="red-text">D</span><span class="blue-text">e</span> 
         <span class="white-text">P</span><span class="red-text">u</span><span class="blue-text">e</span><span class="white-text">r</span><span class="red-text">t</span><span class="blue-text">o</span> 
         <span class="white-text">R</span><span class="red-text">i</span><span class="blue-text">c</span><span class="white-text">o</span> 
@@ -81,29 +155,64 @@
         <span class="red-text">C</span><span class="blue-text">B</span>
     </h1>
     
-    <p class="subtitle" id="subtitle-text">Hello World!</p>
+    <p class="subtitle">Hello World!</p>
 
-    <!-- Interactive Button that triggers JavaScript -->
-    <button class="interactive-btn" onclick="changeVibe()">Click to Change Vibe</button>
+    <!-- Multi-Tab GUI Control Panel -->
+    <div class="gui-panel">
+        <!-- Tab Navigation -->
+        <div class="gui-tabs">
+            <button class="tab-btn active" onclick="switchTab('products-tab', this)">Products</button>
+            <button class="tab-btn" onclick="switchTab('dates-tab', this)">Dates</button>
+            <button class="tab-btn" onclick="switchTab('creator-tab', this)">Creator</button>
+            <button class="tab-btn" onclick="switchTab('contact-tab', this)">Contact</button>
+            <button class="tab-btn" onclick="switchTab('general-info-tab', this)">General Info</button>
+        </div>
+
+        <!-- 1. Products Tab -->
+        <div id="products-tab" class="tab-content active">
+            <p><strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear</p>
+            <button class="gui-btn" onclick="alert('Product catalog coming soon!')">View Catalog</button>
+        </div>
+
+        <!-- 2. Dates Tab -->
+        <div id="dates-tab" class="tab-content">
+            <p><strong>Official Launch:</strong> November 2026</p>
+            <p><strong>Next Update:</strong> Q1 2027</p>
+        </div>
+
+        <!-- 3. Creator Tab -->
+        <div id="creator-tab" class="tab-content">
+            <p>Created with pride by <strong>CB</strong></p>
+            <p style="font-size: 0.75rem; color: #aaa;">Representing roots worldwide from the island.</p>
+        </div>
+
+        <!-- 4. Contact Tab -->
+        <div id="contact-tab" class="tab-content">
+            <p>Get in touch or collaborate with the project.</p>
+            <a href="mailto:example@email.com" class="gui-btn">Send Email</a>
+        </div>
+
+        <!-- 5. General Info Tab -->
+        <div id="general-info-tab" class="tab-content">
+            <p>Hosted live on GitHub Pages.</p>
+            <p style="font-size: 0.75rem; color: #aaa;">Built with HTML5, CSS3, and JavaScript.</p>
+        </div>
+    </div>
 
     <script>
-        // Array of fun messages for the subtitle when the button is clicked
-        const messages = [
-            "Hello World!",
-            "¡Wepa! 🔥",
-            "Built with Code & Pride 🇵🇷",
-            "Live on GitHub Pages 🚀"
-        ];
-        let msgIndex = 0;
+        // Tab Switching Logic
+        function switchTab(tabId, btnElement) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
 
-        function changeVibe() {
-            // Cycle through messages
-            msgIndex = (msgIndex + 1) % messages.length;
-            document.getElementById("subtitle-text").innerText = messages[msgIndex];
+            // Remove active state from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
 
-            // Randomize background flash color slightly
-            const colors = ["#000000", "#110b1e", "#0b192c", "#1f0f0f"];
-            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            // Show selected tab and highlight button
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
         }
     </script>
 </body>
