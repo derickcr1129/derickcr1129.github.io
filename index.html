@@ -9,11 +9,7 @@
             overflow: hidden;
         }
         body {
-            /* Vibrant plantain plantation background with a dark overlay */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1543258103-a6d1c9934391?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-color: #000000; /* Solid black background */
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -31,10 +27,10 @@
             position: absolute;
             top: 25px;
             right: 25px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 10px 18px;
             border-radius: 20px;
             cursor: pointer;
@@ -59,7 +55,7 @@
             text-align: center;
             line-height: 1.2;
             cursor: pointer;
-            text-shadow: 0 3px 12px rgba(0,0,0,0.9);
+            text-shadow: 0 3px 12px rgba(0,0,0,0.5);
         }
 
         h1 span {
@@ -78,18 +74,17 @@
             font-size: 1.5rem;
             margin: 0 0 40px 0;
             letter-spacing: 2px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
         /* --- MULTI-TAB GUI CONTROL PANEL --- */
         .gui-panel {
             position: absolute;
             bottom: 30px;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            width: 440px;
+            width: 480px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             overflow: hidden;
         }
@@ -97,8 +92,8 @@
         /* Tab Navigation Bar */
         .gui-tabs {
             display: flex;
-            background: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             overflow-x: auto;
         }
 
@@ -106,7 +101,7 @@
             flex: 1;
             background: transparent;
             border: none;
-            color: #cccccc;
+            color: #aaaaaa;
             padding: 10px 6px;
             font-size: 0.7rem;
             font-weight: bold;
@@ -119,12 +114,12 @@
 
         .tab-btn:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .tab-btn.active {
             color: #3498db;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
             border-bottom: 2px solid #3498db;
         }
 
@@ -134,10 +129,12 @@
             padding: 20px;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             color: #ffffff;
             font-size: 0.85rem;
             text-align: center;
+            max-height: 250px;
+            overflow-y: auto;
         }
 
         .tab-content.active {
@@ -158,9 +155,47 @@
             text-decoration: underline;
         }
 
+        /* Product List Styling inside Products Tab */
+        .product-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .product-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .product-info {
+            text-align: left;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .product-desc {
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .product-price {
+            color: #3498db;
+            font-weight: bold;
+        }
+
         /* GUI Buttons & Actions */
         .gui-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -209,8 +244,37 @@
 
         <!-- 1. Products Tab -->
         <div id="products-tab" class="tab-content active">
-            <p id="prod-text"><strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear</p>
-            <button id="prod-btn" class="gui-btn" onclick="alert('Product catalog coming soon!')">View Catalog</button>
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="product-info">
+                        <div class="product-name" id="p1-name">PR Island Jersey</div>
+                        <div class="product-desc" id="p1-desc">Breathable athletic fit</div>
+                    </div>
+                    <div class="product-price">$65.00</div>
+                </div>
+                <div class="product-item">
+                    <div class="product-info">
+                        <div class="product-name" id="p2-name">Mundo Classic Shirt</div>
+                        <div class="product-desc" id="p2-desc">100% premium cotton</div>
+                    </div>
+                    <div class="product-price">$30.00</div>
+                </div>
+                <div class="product-item">
+                    <div class="product-info">
+                        <div class="product-name" id="p3-name">CB Legacy Hoodie</div>
+                        <div class="product-desc" id="p3-desc">Heavyweight fleece pullover</div>
+                    </div>
+                    <div class="product-price">$75.00</div>
+                </div>
+                <div class="product-item">
+                    <div class="product-info">
+                        <div class="product-name" id="p4-name">Island Snapback Cap</div>
+                        <div class="product-desc" id="p4-desc">Adjustable embroidered hat</div>
+                    </div>
+                    <div class="product-price">$28.00</div>
+                </div>
+            </div>
+            <button id="prod-btn" class="gui-btn" onclick="alert('Checkout system coming soon!')">Shop All Items</button>
         </div>
 
         <!-- 2. Dates Tab -->
@@ -221,8 +285,8 @@
 
         <!-- 3. Creator Tab -->
         <div id="creator-tab" class="tab-content">
-            <p id="creator-1">Created with pride by <strong>Derick</strong></p>
-            <p id="creator-2" style="font-size: 0.75rem; color: #ddd;">Representing roots worldwide from the island.</p>
+            <p id="creator-1">Created with pride by <strong>CB</strong></p>
+            <p id="creator-2" style="font-size: 0.75rem; color: #aaa;">Representing roots worldwide from the island.</p>
         </div>
 
         <!-- 4. Contact Tab -->
@@ -235,7 +299,7 @@
         <!-- 5. General Info Tab -->
         <div id="general-info-tab" class="tab-content">
             <p id="info-1">Hosted live on GitHub Pages.</p>
-            <p id="info-2" style="font-size: 0.75rem; color: #ddd;">Built with HTML5, CSS3, and JavaScript.</p>
+            <p id="info-2" style="font-size: 0.75rem; color: #aaa;">Built with HTML5, CSS3, and JavaScript.</p>
         </div>
     </div>
 
@@ -257,8 +321,11 @@
         const translations = {
             en: {
                 subtitle: "Hello World!",
-                prodText: "<strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear",
-                prodBtn: "View Catalog",
+                p1Name: "PR Island Jersey", p1Desc: "Breathable athletic fit",
+                p2Name: "Mundo Classic Shirt", p2Desc: "100% premium cotton",
+                p3Name: "CB Legacy Hoodie", p3Desc: "Heavyweight fleece pullover",
+                p4Name: "Island Snapback Cap", p4Desc: "Adjustable embroidered hat",
+                prodBtn: "Shop All Items",
                 dates1: "<strong>Official Launch:</strong> November 2026",
                 dates2: "<strong>Next Update:</strong> Q1 2027",
                 creator1: "Created with pride by <strong>CB</strong>",
@@ -271,8 +338,11 @@
             },
             es: {
                 subtitle: "¡Hola Mundo!",
-                prodText: "<strong>Lanzamiento Destacado:</strong> Ropa y Equipamiento Edición Limitada PR",
-                prodBtn: "Ver Catálogo",
+                p1Name: "Jersey PR Isla", p1Desc: "Corte atlético transpirable",
+                p2Name: "Camisa Clásica Mundo", p2Desc: "100% algodón premium",
+                p3Name: "Sudadera CB Legacy", p3Desc: "Suéter de felpa pesada con gorro",
+                p4Name: "Gorra Snapback de la Isla", p4Desc: "Gorra ajustable bordada",
+                prodBtn: "Ver Todos los Artículos",
                 dates1: "<strong>Lanzamiento Oficial:</strong> Noviembre 2026",
                 dates2: "<strong>Próxima Actualización:</strong> Q1 2027",
                 creator1: "Creado con orgullo por <strong>CB</strong>",
@@ -290,7 +360,14 @@
             const t = translations[currentLang];
 
             document.getElementById('subtitle-text').innerText = t.subtitle;
-            document.getElementById('prod-text').innerHTML = t.prodText;
+            document.getElementById('p1-name').innerText = t.p1Name;
+            document.getElementById('p1-desc').innerText = t.p1Desc;
+            document.getElementById('p2-name').innerText = t.p2Name;
+            document.getElementById('p2-desc').innerText = t.p2Desc;
+            document.getElementById('p3-name').innerText = t.p3Name;
+            document.getElementById('p3-desc').innerText = t.p3Desc;
+            document.getElementById('p4-name').innerText = t.p4Name;
+            document.getElementById('p4-desc').innerText = t.p4Desc;
             document.getElementById('prod-btn').innerText = t.prodBtn;
             document.getElementById('dates-1').innerHTML = t.dates1;
             document.getElementById('dates-2').innerHTML = t.dates2;
