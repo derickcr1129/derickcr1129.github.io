@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>De Puerto Rico pa'l mundo CB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html, body {
             height: 100%;
@@ -9,12 +10,29 @@
             overflow: hidden;
         }
         body {
-            background-color: #000000; /* Solid black background */
+            background-color: #000000;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        /* --- FLOATING BACKGROUND PARTICLES --- */
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Ensure main content sits above particles */
+        .hero-container, .gui-panel, .top-lang-btn, .screen-view {
+            z-index: 2;
         }
 
         /* Color classes */
@@ -39,13 +57,25 @@
             letter-spacing: 0.5px;
             transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 100;
         }
 
         .top-lang-btn:hover {
             background: #3498db;
             color: #000;
             border-color: #3498db;
+            transform: scale(1.05);
+        }
+
+        /* Default Home Hero Container */
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-container.hidden {
+            display: none;
         }
 
         /* Main heading styling */
@@ -74,9 +104,74 @@
             font-size: 1.5rem;
             margin: 0 0 40px 0;
             letter-spacing: 2px;
+            text-align: center;
         }
 
-        /* --- MULTI-TAB GUI CONTROL PANEL --- */
+        /* --- FULL SCREEN VIEW PANELS --- */
+        .screen-view {
+            display: none;
+            position: absolute;
+            top: 15%;
+            width: 550px;
+            max-width: 90vw;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            color: #ffffff;
+            text-align: center;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .screen-view.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .screen-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #dddddd;
+            width: 100%;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .back-btn:hover {
+            background: #ff4d4d;
+            border-color: #ff4d4d;
+            color: #fff;
+        }
+
+        /* --- MULTI-TAB GUI BOTTOM CONTROL PANEL --- */
         .gui-panel {
             position: absolute;
             bottom: 30px;
@@ -85,6 +180,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             width: 480px;
+            max-width: 90vw;
             box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             overflow: hidden;
         }
@@ -92,9 +188,12 @@
         /* Tab Navigation Bar */
         .gui-tabs {
             display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
             overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .gui-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .tab-btn {
@@ -102,7 +201,7 @@
             background: transparent;
             border: none;
             color: #aaaaaa;
-            padding: 10px 4px;
+            padding: 14px 6px;
             font-size: 0.65rem;
             font-weight: bold;
             cursor: pointer;
@@ -114,63 +213,38 @@
 
         .tab-btn:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .tab-btn.active {
             color: #3498db;
-            background: rgba(255, 255, 255, 0.08);
-            border-bottom: 2px solid #3498db;
+            background: rgba(255, 255, 255, 0.12);
+            border-top: 2px solid #3498db;
         }
 
-        /* Tab Content Panes */
-        .tab-content {
-            display: none;
-            padding: 20px;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            color: #ffffff;
-            font-size: 0.85rem;
-            text-align: center;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .tab-content.active {
-            display: flex;
-        }
-
-        .tab-content p {
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .tab-content a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        .tab-content a:hover {
-            text-decoration: underline;
-        }
-
-        /* Product List Styling inside Products Tab */
+        /* Product List Styling inside Products Screen */
         .product-grid {
             display: flex;
             flex-direction: column;
             gap: 10px;
             width: 100%;
+            max-height: 250px;
+            overflow-y: auto;
         }
 
         .product-item {
             background: rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: background 0.2s ease;
+        }
+
+        .product-item:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .product-info {
@@ -180,7 +254,7 @@
         .product-name {
             font-weight: bold;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .product-desc {
@@ -191,12 +265,13 @@
         .product-price {
             color: #3498db;
             font-weight: bold;
+            font-size: 1rem;
         }
 
         /* Social Links Grid */
         .social-grid {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             width: 100%;
             justify-content: center;
         }
@@ -205,10 +280,10 @@
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 10px 14px;
+            padding: 12px 20px;
             border-radius: 10px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             flex: 1;
             transition: all 0.2s ease;
@@ -222,17 +297,17 @@
 
         /* GUI Buttons & Actions */
         .gui-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
         .gui-btn:hover {
@@ -243,36 +318,31 @@
 </head>
 <body>
 
+    <!-- Floating Background Particles Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
     <!-- Top Right Language Toggle Button -->
     <button id="lang-btn" class="top-lang-btn" onclick="toggleLanguage()">🌐 Español</button>
 
-    <!-- Main Content -->
-    <h1 id="main-heading">
-        <span class="red-text">D</span><span class="blue-text">e</span> 
-        <span class="white-text">P</span><span class="red-text">u</span><span class="blue-text">e</span><span class="white-text">r</span><span class="red-text">t</span><span class="blue-text">o</span> 
-        <span class="white-text">R</span><span class="red-text">i</span><span class="blue-text">c</span><span class="white-text">o</span> 
-        <span class="red-text">p</span><span class="blue-text">a</span><span class="white-text">'</span><span class="red-text">l</span> 
-        <span class="blue-text">m</span><span class="white-text">u</span><span class="red-text">n</span><span class="blue-text">d</span><span class="white-text">o</span> 
-        <span class="red-text">C</span><span class="blue-text">B</span>
-    </h1>
-    
-    <p class="subtitle" id="subtitle-text">Hello World!</p>
+    <!-- Hero Home View (Default) -->
+    <div id="hero-container" class="hero-container">
+        <h1 id="main-heading">
+            <span class="red-text">D</span><span class="blue-text">e</span> 
+            <span class="white-text">P</span><span class="red-text">u</span><span class="blue-text">e</span><span class="white-text">r</span><span class="red-text">t</span><span class="blue-text">o</span> 
+            <span class="white-text">R</span><span class="red-text">i</span><span class="blue-text">c</span><span class="white-text">o</span> 
+            <span class="red-text">p</span><span class="blue-text">a</span><span class="white-text">'</span><span class="red-text">l</span> 
+            <span class="blue-text">m</span><span class="white-text">u</span><span class="red-text">n</span><span class="blue-text">d</span><span class="white-text">o</span> 
+            <span class="red-text">C</span><span class="blue-text">B</span>
+        </h1>
+        <p class="subtitle" id="subtitle-text">Hello World!</p>
+    </div>
 
-    <!-- Multi-Tab GUI Control Panel -->
-    <div class="gui-panel">
-        <!-- Tab Navigation (Now 7 Tabs) -->
-        <div class="gui-tabs">
-            <button class="tab-btn active" onclick="switchTab('products-tab', this)">Products</button>
-            <button class="tab-btn" onclick="switchTab('dates-tab', this)">Dates</button>
-            <button class="tab-btn" onclick="switchTab('creator-tab', this)">Creator</button>
-            <button class="tab-btn" onclick="switchTab('socials-tab', this)">Socials</button>
-            <button class="tab-btn" onclick="switchTab('audio-tab', this)">Audio</button>
-            <button class="tab-btn" onclick="switchTab('contact-tab', this)">Contact</button>
-            <button class="tab-btn" onclick="switchTab('general-info-tab', this)">Info</button>
-        </div>
+    <!-- ==================== DEDICATED SCREEN VIEWS ==================== -->
 
-        <!-- 1. Products Tab -->
-        <div id="products-tab" class="tab-content active">
+    <!-- 1. Products Screen -->
+    <div id="screen-products" class="screen-view">
+        <div class="screen-title" id="screen-prod-title">Products</div>
+        <div class="screen-body">
             <div class="product-grid">
                 <div class="product-item">
                     <div class="product-info">
@@ -303,67 +373,178 @@
                     <div class="product-price">$28.00</div>
                 </div>
             </div>
-            <button id="prod-btn" class="gui-btn" onclick="alert('Checkout system coming soon!')">Shop All Items</button>
         </div>
+        <button id="prod-btn" class="gui-btn" onclick="alert('Checkout system coming soon!')">Shop All Items</button>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 2. Dates Tab -->
-        <div id="dates-tab" class="tab-content">
-            <p id="dates-1"><strong>Official Launch:</strong> November 2026</p>
-            <p id="dates-2"><strong>Next Update:</strong> Q1 2027</p>
+    <!-- 2. Dates Screen -->
+    <div id="screen-dates" class="screen-view">
+        <div class="screen-title" id="screen-dates-title">Dates & Launches</div>
+        <div class="screen-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <p id="dates-1" style="font-size: 1.1rem;"><strong>Official Launch:</strong> November 2026</p>
+            <p id="dates-2" style="font-size: 1.1rem;"><strong>Next Update:</strong> Q1 2027</p>
         </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 3. Creator Tab -->
-        <div id="creator-tab" class="tab-content">
-            <p id="creator-1">Created with pride by <strong>CB</strong></p>
-            <p id="creator-2" style="font-size: 0.75rem; color: #aaa;">Representing roots worldwide from the island.</p>
+    <!-- 3. Creator Screen -->
+    <div id="screen-creator" class="screen-view">
+        <div class="screen-title" id="screen-creator-title">Creator</div>
+        <div class="screen-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <p id="creator-1" style="font-size: 1.2rem;">Created with pride by <strong>CB</strong></p>
+            <p id="creator-2" style="font-size: 0.95rem; color: #aaa;">Representing roots worldwide from the island.</p>
         </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 4. Socials Tab (NEW) -->
-        <div id="socials-tab" class="tab-content">
-            <p id="socials-desc">Follow the movement across social media:</p>
+    <!-- 4. Socials Screen -->
+    <div id="screen-socials" class="screen-view">
+        <div class="screen-title" id="screen-socials-title">Social Media</div>
+        <div class="screen-body">
+            <p id="socials-desc" style="margin-bottom: 20px;">Follow the movement across social media:</p>
             <div class="social-grid">
                 <a href="https://instagram.com" target="_blank" class="social-btn">Instagram</a>
                 <a href="https://tiktok.com" target="_blank" class="social-btn">TikTok</a>
                 <a href="https://youtube.com" target="_blank" class="social-btn">YouTube</a>
             </div>
         </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 5. Audio Player Tab (NEW) -->
-        <div id="audio-tab" class="tab-content">
-            <p id="audio-desc">Play ambient background sound:</p>
-            <!-- Royalty-free ambient lo-fi / chill background stream audio element -->
+    <!-- 5. Audio Screen -->
+    <div id="screen-audio" class="screen-view">
+        <div class="screen-title" id="screen-audio-title">Ambient Audio</div>
+        <div class="screen-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <p id="audio-desc">Play ambient background sound while you browse:</p>
             <audio id="bg-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3"></audio>
             <button id="audio-btn" class="gui-btn" onclick="toggleAudio()">▶ Play Ambient Beats</button>
         </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 6. Contact Tab -->
-        <div id="contact-tab" class="tab-content">
-            <p id="contact-text">Get in touch or collaborate with the project.</p>
-            <p>📞 <a href="tel:9395556567">939-555-6567</a></p>
+    <!-- 6. Contact Screen -->
+    <div id="screen-contact" class="screen-view">
+        <div class="screen-title" id="screen-contact-title">Contact</div>
+        <div class="screen-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <p id="contact-text" style="font-size: 1.1rem;">Get in touch or collaborate with the project.</p>
+            <p style="font-size: 1.2rem;">📞 <a href="tel:9395556567" style="color: #3498db;">939-555-6567</a></p>
             <a id="contact-btn" href="mailto:notarealemail@gmail.com" class="gui-btn">Email Me</a>
         </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
 
-        <!-- 7. General Info Tab -->
-        <div id="general-info-tab" class="tab-content">
-            <p id="info-1">Hosted live on GitHub Pages.</p>
-            <p id="info-2" style="font-size: 0.75rem; color: #aaa;">Built with HTML5, CSS3, and JavaScript.</p>
+    <!-- 7. General Info Screen -->
+    <div id="screen-info" class="screen-view">
+        <div class="screen-title" id="screen-info-title">General Info</div>
+        <div class="screen-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <p id="info-1" style="font-size: 1.1rem;">Hosted live on GitHub Pages.</p>
+            <p id="info-2" style="font-size: 0.95rem; color: #aaa;">Built with HTML5, CSS3, and JavaScript.</p>
+        </div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+    </div>
+
+    <!-- ==================== BOTTOM GUI NAVIGATION PANEL ==================== -->
+    <div class="gui-panel">
+        <div class="gui-tabs">
+            <button class="tab-btn" onclick="openScreen('screen-products', this)">Products</button>
+            <button class="tab-btn" onclick="openScreen('screen-dates', this)">Dates</button>
+            <button class="tab-btn" onclick="openScreen('screen-creator', this)">Creator</button>
+            <button class="tab-btn" onclick="openScreen('screen-socials', this)">Socials</button>
+            <button class="tab-btn" onclick="openScreen('screen-audio', this)">Audio</button>
+            <button class="tab-btn" onclick="openScreen('screen-contact', this)">Contact</button>
+            <button class="tab-btn" onclick="openScreen('screen-info', this)">Info</button>
         </div>
     </div>
 
     <script>
-        // Tab Switching Logic
-        function switchTab(tabId, btnElement) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
+        // --- FLOATING PARTICLES ANIMATION SCRIPT ---
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
 
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particlesArray = [];
+        const numberOfParticles = 40;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- Screen Switching Logic ---
+        function openScreen(screenId, btnElement) {
+            // Hide hero title
+            document.getElementById('hero-container').classList.add('hidden');
+
+            // Hide all screen views
+            const screens = document.querySelectorAll('.screen-view');
+            screens.forEach(scr => scr.classList.remove('active'));
+
+            // Remove active state from tab buttons
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
 
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
+            // Show target screen and highlight tab button
+            document.getElementById(screenId).classList.add('active');
+            if(btnElement) btnElement.classList.add('active');
         }
 
-        // Audio Toggle Logic
+        function goHome() {
+            // Show hero title
+            document.getElementById('hero-container').classList.remove('hidden');
+
+            // Hide all screen views
+            const screens = document.querySelectorAll('.screen-view');
+            screens.forEach(scr => scr.classList.remove('active'));
+
+            // Clear tab button highlights
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+        }
+
+        // --- Audio Toggle Logic ---
         let isPlaying = false;
         function toggleAudio() {
             const audio = document.getElementById('bg-audio');
@@ -380,47 +561,61 @@
             }
         }
 
-        // Translation Dictionary & Logic
+        // --- Translation Dictionary & Logic ---
         let currentLang = 'en';
         const translations = {
             en: {
                 subtitle: "Hello World!",
+                screenProdTitle: "Products",
                 p1Name: "PR Island Jersey", p1Desc: "Breathable athletic fit",
                 p2Name: "Mundo Classic Shirt", p2Desc: "100% premium cotton",
                 p3Name: "CB Legacy Hoodie", p3Desc: "Heavyweight fleece pullover",
                 p4Name: "Island Snapback Cap", p4Desc: "Adjustable embroidered hat",
                 prodBtn: "Shop All Items",
+                screenDatesTitle: "Dates & Launches",
                 dates1: "<strong>Official Launch:</strong> November 2026",
                 dates2: "<strong>Next Update:</strong> Q1 2027",
+                screenCreatorTitle: "Creator",
                 creator1: "Created with pride by <strong>CB</strong>",
                 creator2: "Representing roots worldwide from the island.",
+                screenSocialsTitle: "Social Media",
                 socialsDesc: "Follow the movement across social media:",
-                audioDesc: "Play ambient background sound:",
+                screenAudioTitle: "Ambient Audio",
+                audioDesc: "Play ambient background sound while you browse:",
                 audioBtnPlay: "▶ Play Ambient Beats",
                 audioBtnPause: "⏸ Pause Ambient Beats",
+                screenContactTitle: "Contact",
                 contactText: "Get in touch or collaborate with the project.",
                 contactBtn: "Email Me",
+                screenInfoTitle: "General Info",
                 info1: "Hosted live on GitHub Pages.",
                 info2: "Built with HTML5, CSS3, and JavaScript.",
                 langBtn: "🌐 Español"
             },
             es: {
                 subtitle: "¡Hola Mundo!",
+                screenProdTitle: "Productos",
                 p1Name: "Jersey PR Isla", p1Desc: "Corte atlético transpirable",
                 p2Name: "Camisa Clásica Mundo", p2Desc: "100% algodón premium",
                 p3Name: "Sudadera CB Legacy", p3Desc: "Suéter de felpa pesada con gorro",
                 p4Name: "Gorra Snapback de la Isla", p4Desc: "Gorra ajustable bordada",
                 prodBtn: "Ver Todos los Artículos",
+                screenDatesTitle: "Fechas y Lanzamientos",
                 dates1: "<strong>Lanzamiento Oficial:</strong> Noviembre 2026",
                 dates2: "<strong>Próxima Actualización:</strong> Q1 2027",
+                screenCreatorTitle: "Creador",
                 creator1: "Creado con orgullo por <strong>CB</strong>",
                 creator2: "Representando las raíces de la isla para el mundo.",
+                screenSocialsTitle: "Redes Sociales",
                 socialsDesc: "Sigue el movimiento en redes sociales:",
-                audioDesc: "Reproduce sonido ambiente de fondo:",
+                screenAudioTitle: "Audio Ambiente",
+                audioDesc: "Reproduce sonido ambiente de fondo mientras navegas:",
                 audioBtnPlay: "▶ Reproducir Música",
                 audioBtnPause: "⏸ Pausar Música",
+                screenContactTitle: "Contacto",
                 contactText: "Ponte en contacto o colabora con el proyecto.",
                 contactBtn: "Enviar Correo",
+                screenInfoTitle: "Información General",
                 info1: "Alojado en vivo en GitHub Pages.",
                 info2: "Construido con HTML5, CSS3 y JavaScript.",
                 langBtn: "🌐 English"
@@ -432,6 +627,7 @@
             const t = translations[currentLang];
 
             document.getElementById('subtitle-text').innerText = t.subtitle;
+            document.getElementById('screen-prod-title').innerText = t.screenProdTitle;
             document.getElementById('p1-name').innerText = t.p1Name;
             document.getElementById('p1-desc').innerText = t.p1Desc;
             document.getElementById('p2-name').innerText = t.p2Name;
@@ -441,15 +637,21 @@
             document.getElementById('p4-name').innerText = t.p4Name;
             document.getElementById('p4-desc').innerText = t.p4Desc;
             document.getElementById('prod-btn').innerText = t.prodBtn;
+            document.getElementById('screen-dates-title').innerText = t.screenDatesTitle;
             document.getElementById('dates-1').innerHTML = t.dates1;
             document.getElementById('dates-2').innerHTML = t.dates2;
+            document.getElementById('screen-creator-title').innerText = t.screenCreatorTitle;
             document.getElementById('creator-1').innerHTML = t.creator1;
             document.getElementById('creator-2').innerText = t.creator2;
+            document.getElementById('screen-socials-title').innerText = t.screenSocialsTitle;
             document.getElementById('socials-desc').innerText = t.socialsDesc;
+            document.getElementById('screen-audio-title').innerText = t.screenAudioTitle;
             document.getElementById('audio-desc').innerText = t.audioDesc;
             document.getElementById('audio-btn').innerText = isPlaying ? t.audioBtnPause : t.audioBtnPlay;
+            document.getElementById('screen-contact-title').innerText = t.screenContactTitle;
             document.getElementById('contact-text').innerText = t.contactText;
             document.getElementById('contact-btn').innerText = t.contactBtn;
+            document.getElementById('screen-info-title').innerText = t.screenInfoTitle;
             document.getElementById('info-1').innerText = t.info1;
             document.getElementById('info-2').innerText = t.info2;
             document.getElementById('lang-btn').innerText = t.langBtn;
