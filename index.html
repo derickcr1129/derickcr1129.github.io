@@ -26,6 +26,32 @@
         .blue-text { color: #3498db; }
         .white-text { color: #ffffff; }
 
+        /* Top Right Language Toggle Button */
+        .top-lang-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        .top-lang-btn:hover {
+            background: #3498db;
+            color: #000;
+            border-color: #3498db;
+        }
+
         /* Main heading styling */
         h1 {
             font-size: 3.5rem;
@@ -155,6 +181,9 @@
 </head>
 <body>
 
+    <!-- Top Right Language Toggle Button -->
+    <button id="lang-btn" class="top-lang-btn" onclick="toggleLanguage()">🌐 Español</button>
+
     <!-- Main Content -->
     <h1 id="main-heading">
         <span class="red-text">D</span><span class="blue-text">e</span> 
@@ -165,7 +194,7 @@
         <span class="red-text">C</span><span class="blue-text">B</span>
     </h1>
     
-    <p class="subtitle">Hello World!</p>
+    <p class="subtitle" id="subtitle-text">Hello World!</p>
 
     <!-- Multi-Tab GUI Control Panel -->
     <div class="gui-panel">
@@ -180,33 +209,33 @@
 
         <!-- 1. Products Tab -->
         <div id="products-tab" class="tab-content active">
-            <p><strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear</p>
-            <button class="gui-btn" onclick="alert('Product catalog coming soon!')">View Catalog</button>
+            <p id="prod-text"><strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear</p>
+            <button id="prod-btn" class="gui-btn" onclick="alert('Product catalog coming soon!')">View Catalog</button>
         </div>
 
         <!-- 2. Dates Tab -->
         <div id="dates-tab" class="tab-content">
-            <p><strong>Official Launch:</strong> November 2026</p>
-            <p><strong>Next Update:</strong> Q1 2027</p>
+            <p id="dates-1"><strong>Official Launch:</strong> November 2026</p>
+            <p id="dates-2"><strong>Next Update:</strong> Q1 2027</p>
         </div>
 
         <!-- 3. Creator Tab -->
         <div id="creator-tab" class="tab-content">
-            <p>Created with pride by <strong>CB</strong></p>
-            <p style="font-size: 0.75rem; color: #ddd;">Representando nuestras raices desde la isla del Encanto</p>
+            <p id="creator-1">Created with pride by <strong>CB</strong></p>
+            <p id="creator-2" style="font-size: 0.75rem; color: #ddd;">Representing roots worldwide from the island.</p>
         </div>
 
         <!-- 4. Contact Tab -->
         <div id="contact-tab" class="tab-content">
-            <p>Get in touch or collaborate with the project.</p>
+            <p id="contact-text">Get in touch or collaborate with the project.</p>
             <p>📞 <a href="tel:9395556567">939-555-6567</a></p>
-            <a href="mailto:notarealemail@gmail.com" class="gui-btn">Email Me</a>
+            <a id="contact-btn" href="mailto:notarealemail@gmail.com" class="gui-btn">Email Me</a>
         </div>
 
         <!-- 5. General Info Tab -->
         <div id="general-info-tab" class="tab-content">
-            <p>Hosted live on GitHub Pages.</p>
-            <p style="font-size: 0.75rem; color: #ddd;">Hecho con HTML5, CSS3 y JavaScript.</p>
+            <p id="info-1">Hosted live on GitHub Pages.</p>
+            <p id="info-2" style="font-size: 0.75rem; color: #ddd;">Built with HTML5, CSS3, and JavaScript.</p>
         </div>
     </div>
 
@@ -221,6 +250,57 @@
 
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
+        }
+
+        // Translation Dictionary & Logic
+        let currentLang = 'en';
+        const translations = {
+            en: {
+                subtitle: "Hello World!",
+                prodText: "<strong>Featured Drop:</strong> Limited Edition PR Apparel & Gear",
+                prodBtn: "View Catalog",
+                dates1: "<strong>Official Launch:</strong> November 2026",
+                dates2: "<strong>Next Update:</strong> Q1 2027",
+                creator1: "Created with pride by <strong>CB</strong>",
+                creator2: "Representing roots worldwide from the island.",
+                contactText: "Get in touch or collaborate with the project.",
+                contactBtn: "Email Me",
+                info1: "Hosted live on GitHub Pages.",
+                info2: "Built with HTML5, CSS3, and JavaScript.",
+                langBtn: "🌐 Español"
+            },
+            es: {
+                subtitle: "¡Hola Mundo!",
+                prodText: "<strong>Lanzamiento Destacado:</strong> Ropa y Equipamiento Edición Limitada PR",
+                prodBtn: "Ver Catálogo",
+                dates1: "<strong>Lanzamiento Oficial:</strong> Noviembre 2026",
+                dates2: "<strong>Próxima Actualización:</strong> Q1 2027",
+                creator1: "Creado con orgullo por <strong>CB</strong>",
+                creator2: "Representando las raíces de la isla para el mundo.",
+                contactText: "Ponte en contacto o colabora con el proyecto.",
+                contactBtn: "Enviar Correo",
+                info1: "Alojado en vivo en GitHub Pages.",
+                info2: "Construido con HTML5, CSS3 y JavaScript.",
+                langBtn: "🌐 English"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const t = translations[currentLang];
+
+            document.getElementById('subtitle-text').innerText = t.subtitle;
+            document.getElementById('prod-text').innerHTML = t.prodText;
+            document.getElementById('prod-btn').innerText = t.prodBtn;
+            document.getElementById('dates-1').innerHTML = t.dates1;
+            document.getElementById('dates-2').innerHTML = t.dates2;
+            document.getElementById('creator-1').innerHTML = t.creator1;
+            document.getElementById('creator-2').innerText = t.creator2;
+            document.getElementById('contact-text').innerText = t.contactText;
+            document.getElementById('contact-btn').innerText = t.contactBtn;
+            document.getElementById('info-1').innerText = t.info1;
+            document.getElementById('info-2').innerText = t.info2;
+            document.getElementById('lang-btn').innerText = t.langBtn;
         }
     </script>
 </body>
